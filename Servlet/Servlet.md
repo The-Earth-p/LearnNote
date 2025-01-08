@@ -130,3 +130,15 @@ config是多例的，context是单例的，一个项目就一个对象
 获取项目上下文路径
 
 ![image-20250107114045564](C:\Users\Only one\AppData\Roaming\Typora\typora-user-images\image-20250107114045564.png)
+
+### 域对象相关api
+
+域对象：实现域内数据的传递的对象
+
+servletcontext就是最大的域，它是所有servlet共享的，也叫应用域。
+
+setAttribute  域中存储/新增
+
+getAttribute  域中获取数据
+
+removeAttribute 域中删除数据
