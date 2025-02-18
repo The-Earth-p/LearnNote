@@ -102,3 +102,53 @@ CRUD案例：
 ![image-20250217152438449](C:\Users\Only one\AppData\Roaming\Typora\typora-user-images\image-20250217152438449.png)
 
 ![image-20250217152611975](C:\Users\Only one\AppData\Roaming\Typora\typora-user-images\image-20250217152611975.png)
+
+## 数据校验
+
+![image-20250218110523266](C:\Users\Only one\AppData\Roaming\Typora\typora-user-images\image-20250218110523266.png)
+
+直接在实体类的属性上加一些注解：
+
+1. @NotBlank 不能为空，还能加参数message，出错时返回给前端
+2. @Max/Min 参数“value”划定参数，也能返回message
+3. @Email 要求邮箱格式
+
+如果校验出错，返回给前端：
+
+![image-20250218110242341](C:\Users\Only one\AppData\Roaming\Typora\typora-user-images\image-20250218110242341.png)
+
+
+在方法参数中再添加一个BindingResult类的参数，有很多方法可以获取错误信息
+
+![image-20250218110642431](C:\Users\Only one\AppData\Roaming\Typora\typora-user-images\image-20250218110642431.png)
+
+也可以通过全局异常来处理错误
+
+![image-20250218110952062](C:\Users\Only one\AppData\Roaming\Typora\typora-user-images\image-20250218110952062.png)
+
+自定义注解来实现校验：
+
+1. 注解编写：
+
+![image-20250218111431697](C:\Users\Only one\AppData\Roaming\Typora\typora-user-images\image-20250218111431697.png)
+
+2. 校验器编写
+
+![image-20250218111535464](C:\Users\Only one\AppData\Roaming\Typora\typora-user-images\image-20250218111535464.png)
+
+3. 添加注解即可
+
+![image-20250218111655234](C:\Users\Only one\AppData\Roaming\Typora\typora-user-images\image-20250218111655234.png)
+
+各种xxO：
+
+1. Pojo：普通Java类
+2. Dao：Database Access Object
+3. TO：transfer Object
+4. VO：Value Object
+
+vo实例：新建一个专门用来接请求数据的实体类，在接口中实现属性值的传递，即vo转为do，在把do用于数据库的存储，关键方法是BeanUtils中的copyProperties，数据对拷
+
+## 接口文档
+
+Knife4j直接生成，有相应的注解
