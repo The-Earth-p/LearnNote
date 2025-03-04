@@ -1,6 +1,6 @@
 # MyBatis
 
-持久层框架，这种框架下，dao包下直接一个Mapper接口文件，加上@Mapper的注解，直接设置方法即可。方法设置完成后，需要重新构建一个xml文件，放在resource下的mapper文件夹中，在该文件中完成对应的映射即可，要调用这个方法，直接自动注入接口类即可，另外需要注意要在properties中高速mybatismapper文件都在哪个文件夹下
+持久层框架，这种框架下，dao包下直接一个Mapper接口文件，加上@Mapper的注解，直接设置方法即可，也可以在配置类中用MapperScan注解来说明哪些是mapper。方法设置完成后，需要重新构建一个xml文件，放在resource下的mapper文件夹中，在该文件中完成对应的映射即可，要调用这个方法，直接自动注入接口类即可，另外需要注意要在properties中高速mybatismapper文件都在哪个文件夹下
 
 ## 相关细节
 
@@ -78,3 +78,20 @@ ${}：表名等位置，不支持预编译，只能用这个
 批量修改，要发多个sql，需要开启多sql支持![image-20250219205036225](C:\Users\Only one\AppData\Roaming\Typora\typora-user-images\image-20250219205036225.png)
 
 ![image-20250219204815862](C:\Users\Only one\AppData\Roaming\Typora\typora-user-images\image-20250219204815862.png)
+
+## 缓存机制
+
+Mybatis有二级缓存机制，默认事务期间，会开启事务级别缓存，缓存有失效的情况
+
+一级：同一个事务有缓存，前后查询不需要多次访问数据库，即为事务级别的缓存，前后执行相同的查询，不会再给数据库发sql
+
+二级：一次事务的结果会存在二级里
+
+## 分页插件
+
+1. 引入分页插件pagehelper
+2. 写一个配置类，创建一个分页插件对象，在配置类中，可以设置分页对象的一些属性，比如是否合理化
+3. 设置参数，pagehelper.startPage通过调用这个方法，下一条执行的sql会根据这个方法的参数来分页
+
+前后端怎么串联信息：后端新建一个PageInfo<>对象，用来存后端返回给前端的信息
+
