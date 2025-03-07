@@ -89,3 +89,87 @@ docker run -d -p 6380:6379 \-v /app/rd2:/bitnami/redis/data \-e REDIS_REPLICATIO
  bitnami/redis
 ```
 
+## DockerCompose
+
+配置文件中的元素
+
+![image-20250307165154766](C:\Users\Only one\AppData\Roaming\Typora\typora-user-images\image-20250307165154766.png)
+
+基本语法：
+
+```shell
+name: myblog
+ services:
+  mysql:
+    container_name: mysql#自己起的容器名
+    image: mysql:8.0#用哪个镜像
+    ports:
+      - "3306:3306"#外部端口：内部端口
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_DATABASE=wordpress
+    volumes:#卷挂载
+      - mysql-data:/var/lib/mysql
+      - /app/myconf:/etc/mysql/conf.d
+    restart: always
+    networks:#要用的自定义网络
+      - blog
+  wordpress:
+    image: wordpress
+    ports:
+      - "8080:80"
+    environment:
+      WORDPRESS_DB_HOST: mysql
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: 123456
+      WORDPRESS_DB_NAME: wordpress
+    volumes:
+      - wordpress:/var/www/html
+    restart: always#自启动
+    networks:
+      - blog
+    depends_on:
+      - mysql
+ volumes:
+  mysql-data:
+  wordpress:
+ networks:#指示一下是哪个自定义网络
+  blog:
+```
+
+配置好上述yaml文件后，需要通过vim命令在docker的服务器中创建一个相同内容的文件并复制进去，然后通过
+
+`docker compose -f compose.yaml up -d`
+
+命令来创建一个新自定义网络，容器的名字会加上配置文件中的name
+
+![image-20250307170121534](C:\Users\Only one\AppData\Roaming\Typora\typora-user-images\image-20250307170121534.png)
+
+最后通过`docker compose -f compose.yaml down`可以配置相关的参数，移除对应的对象
+
+## 制作自己的镜像
+
+编写DockerFile文件
+
+常见指令：
+
+![image-20250307170956310](C:\Users\Only one\AppData\Roaming\Typora\typora-user-images\image-20250307170956310.png)
+
+整体步骤：
+
+1. 首先是要把自己的jar包或者其他想要搞到一个文件里的东西上传到docker服务器，通过rz实现
+2. 编写DockerFile文件，在里面书写常见指令，如下：
+
+```shell
+ FROM openjdk:17#docker自己就有jdk，直接指定就行
+ LABEL author=leifengyang
+ COPY app.jar /app.jar#把当前目录下的jar包（前一个）放到后面这个有新容器/新系统具体路径的地方
+ EXPOSE 8080#暴露给外界的端口
+ ENTRYPOINT ["java","-jar","/app.jar"]
+```
+
+3. 指令`docker build -f Dockerfile -t myjavaapp:v1.0 . `-t用来指明它的具体名字和对应的版本号；一定要注意末尾的.号，表示当前目录
+4. 然后myjavaapp的容器就自动启动了
+
+镜像分层存储机制：两个镜像有相同点，则把相同的部分合在一起，作为底层，两个镜像相当于公用了同一块内存
+

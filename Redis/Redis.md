@@ -1,0 +1,5 @@
+# Redis
+
+remote dictionary server 远程字典服务，是一种基于内存的KV键值对内存数据库
+
+redis和mysql之间的关系类似于计算机组成原理里面的cache和内存，有了redis之后，要找数据会先去redis里面找，找不到了再去硬盘的mysql中找，然后再往redis里面写一份，redis和mysql是共同使用的

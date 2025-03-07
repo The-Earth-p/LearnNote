@@ -560,3 +560,153 @@ def 静态方法名(cls,[形参列表])#不可通过类方法访问特定的实�
 ### get和set
 
 防止随意将实例属性设成任意值，则将属性私有化，通过get和set方法来实现获取和更改
+
+## 类的重用
+
+### 继承
+
+基本和C++还有Java的继承差不多，但是要注意：
+
+1. python支持多重继承，即可以同时有好几个父类
+2. python是一种is-a的继承模式
+3. 子类只能通过父类中的公有属性来访问私有属性
+4. 子类如果定义了和父类名字相同的属性，则父类的属性在子类中会被覆盖
+5. 方法同4，但是子类想要调用父类中的方法，可以使用`super(子类类名, self).方法名称(参数)  `的格式
+
+定义语法格式：
+
+```python
+class ChildClassName(父类名1[, 父类名2[,父类名3, …]]):
+    类体或pass语句
+```
+
+若小括号内没有指定父类，则表示从object类派生
+
+继承关系中的__init\_\_方法：
+
+1. 如果子类没有提供初始方法，则默认执行父类的初始化方法
+2. 子类提供了初始化方法，则执行子类的
+3. 可以通过如下两种方式调用父类的初始化方法 
+
+```python
+父类名.init(self, 其他参数)
+super(本子类名, self).init(其他参数)
+```
+
+### 组合
+
+是一种has-a的关系，也就是一个类通过把其他类的对象作为自己的属性，这就是组合
+
+两种初始化的方法：
+
+1. 把参数传给作为自身属性的对象的类的初始化函数
+
+```python
+#第一种方法：实现对象属性初始化。
+#------------- Display、Memory类 -----------------
+class Display(object):
+    def __init__(self,size):
+        self.size = size
+
+class Memory(object):
+    def __init__(self,size):
+        self.size = size
+#------------- Computer类 -----------        
+class Computer(object):
+    def __init__(self,displaySize,memorySize):
+        self.display = Display(displaySize)  #传递参数给Display()的初始化方法
+        self.memory = Memory(memorySize)     #.........Memory()............
+
+#-------------------- 主程序 ----------------------
+def main():
+    c = Computer(23,2048)
+    
+if __name__ == "__main__":
+    main()
+```
+
+2. 把类实例化的对象作为参数传给组合类的初始化参数
+
+```python
+#（第二种方法）
+#------------- Display、Memory类 -----------------
+class Display(object):
+    def __init__(self,size):
+        self.size = size
+class Memory(object):
+    def __init__(self,size):
+        self.size = size
+#--------------- Computer类 -----------------
+class Computer(object):
+    def __init__(self,display,memory):
+        self.display = display
+        self.memory = memory
+
+#------------- 主程序 -----------------
+def main():
+    display = Display(23)    #创建被组合对象Display，此时传递参数
+    memory = Memory(2048)
+    c = Computer(display,memory)
+    
+if __name__ == "__main__":
+    main()
+```
+
+## 异常
+
+python中标准异常类：
+
+![image-20250307115731095](C:\Users\Only one\AppData\Roaming\Typora\typora-user-images\image-20250307115731095.png)
+
+异常处理语法：
+
+```python
+try:
+    <可能出现异常的语句块>      # 自动抛出标准异常类的对象
+    raise 自定义的异常类名字()  # 或者 主动创建并抛出 自定义异常类的对象
+except <异常类名字name1>:
+    <异常处理语句块1>   #如果在try部份引发了'name1'异常，执行这部分语句块   
+except <异常类名字name2> as e1： #将抛出的异常对象传给e1（处理语句需要其中的信息）
+    <异常处理语句块2>   #如果在try部份引发了'name2'异常，执行这部分语句块
+except < (异常类名字name3, 异常类名字name4, …)> as e2: #本块可以处理多种异常类对象
+    <异常处理语句块3>   #如果引发了'name3'、'name4'、…中任何一个异常，执行该语句块
+…
+except:
+    <异常处理语句块n>   #如果引发了异常，但与上述异常都不匹配，执行此语句块
+else:                  #如果没有上述所列的异常发生，执行else语句块
+    <else语句块>       
+finally:              #无论有无异常，都需要执行的语句块
+    <任何情况下都要执行的语句块>
+```
+
+### 自定义异常类
+
+可以继承所有异常的基类或其子类，类名要以Error或者Exception为后缀，系统无法识别自定义类，所以想要捕获，必须通过raise显式的抛出
+
+### with语句
+
+基本用于简化打开文件时try except语句的使用，如
+
+```python
+#常规异常处理写法
+try:
+    f=open('testwith.txt','r')  
+    for line in f:
+        print(line,end='')
+finally:
+    f.close()
+#简化后的代码
+with open('testwith.txt','r') as f:   # 不需要写f.close()语句了
+    for line in f:
+        print(line,end='')
+
+```
+
+### 断言 assert
+
+类似于raise-if-not，断言是真，则无动作，断言为假，则出发AssertionError异常，格式如下：
+
+```python
+	assert expression [, arguments] #后面的argument作为抛出的异常对象的失败信息
+```
+
