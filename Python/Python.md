@@ -73,7 +73,7 @@ flush：将缓存里面的内容是否强制刷新输出，默认值是False（�
 
 ```
 -查：
-.index(value,[start=0[,stop]])下标为start的开始寻找，找到与value相等的元素的下标
+.index(value,[start=0[,stop]])下标为start的开始寻找，找到与value相等的元素的下标，如果没找到则报错
 .count()数数
 -增：
 .extend()末尾一次性添加另一个列表的多个值
