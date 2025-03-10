@@ -641,3 +641,62 @@ XPENDING mystream groupC - + 10 consumer2
 //    4) (integer) 1 消息被传递的次数，该消息被传递给消费者的次数，如果消息被多次传递（例如消费者处理失败后重新传递），这个值会大于 1
 ```
 
+## 持久化
+
+通过RDB（快照）或者AOF（指令复现）来实现持久化
+
+### RDB （redis database）
+
+rdb适合大规模的数据恢复，但是有2倍膨胀的缺点，而且可能备份不及时，在指定的时间间隔内，实现数据的快照，把所有数据都保存在硬盘上，以rdb文件格式保存，这种持久化方法是默认的
+
+配置文件：
+
+7之前的：
+
+![image-20250310105328679](C:\Users\Only one\AppData\Roaming\Typora\typora-user-images\image-20250310105328679.png)
+
+目前的：
+
+![image-20250310105406995](C:\Users\Only one\AppData\Roaming\Typora\typora-user-images\image-20250310105406995.png)
+
+操作分自动触发和手动触发
+
+自动触发：
+
+这个save可以手动设置，可以指定保存rdb文件的路径，路径中的文件夹要求已经存在，还可以修改rdb文件名
+
+执行flushall会自动生成一个空的rdb文件，无意义，因此需要我们把启动redis的机器和备份rdb文件的机器分机，不然就会覆盖
+
+
+
+手动触发：
+
+调用bgsave来手动执行备份，不可以用save，因为save会阻塞当前redis服务器，而bgsave会另外fork一个子进程，和父进程一样，在这个子进程中自行备份
+
+可以通过redis-check-rdb #rdb文件名来检查并修复指定文件
+
+禁用快照：配置文件中直接禁用
+
+![image-20250310112734638](C:\Users\Only one\AppData\Roaming\Typora\typora-user-images\image-20250310112734638.png)
+
+参数优化：
+
+![image-20250310113130194](C:\Users\Only one\AppData\Roaming\Typora\typora-user-images\image-20250310113130194.png)
+
+### AOF （Append Only File）
+
+以日志的形式来记录每个写操作，把所有执行过的指令都记录下来，并且这个文件只能继续追加写或者但不可以更改，AOF是默认关闭的，存下来的日志文件是.aof，这个文件里会自动压缩来保证文件不要太大下一次打开就会再执行一次aof文件中的所有命令来实现持久化
+
+写回策略：
+
+always 每个写命令执行完立刻同步把最新的日志写到磁盘
+
+everysec 写命令执行完，先把东西写到aof缓存中，每隔一秒写到磁盘中一次，是默认的方式
+
+no 写到缓存中，由操作系统决定什么写回磁盘
+
+配置文件：
+
+开启aof  `appendonly yes`即可
+
+保存路径  为了和rdb区分，会在配置文件中多设置一项appenddirname，这一项会有个值，那个值会加在aof的文件路径当中
