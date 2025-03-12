@@ -60,7 +60,8 @@ C语言不支持重载
 
 使用auto变量时必须对其进行初始化
 
-`#include <iostream>
+```C++
+#include <iostream>
 using namespace std;
 double Fun()
 {
@@ -77,7 +78,8 @@ int main()
 	cout << typeid(c).name() << endl;//打印结果为char
 	cout << typeid(d).name() << endl;//打印结果为double
 	return 0;
-}`
+}
+```
 
 1.用auto声明指针类型时，用auto和auto*没有任何区别，但用auto声明引用类型时必须加&
 
