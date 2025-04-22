@@ -4,6 +4,15 @@
 
 ![image-20250214112516817](C:\Users\Only one\AppData\Roaming\Typora\typora-user-images\image-20250214112516817.png)
 
+依赖项：
+
+```java
+<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+```
+
 ## 路径映射：@RequestMapping
 
 通配符：精确优先，精确唯一![image-20250214113515393](C:\Users\Only one\AppData\Roaming\Typora\typora-user-images\image-20250214113515393.png)
