@@ -453,7 +453,7 @@ f(x)=x^2+x+1 \label{e1}   自动编号
 \date{\today}
 
 \begin{document}
-	这是一个参考文献的引用:\cite{mittelbach2004}
+	这是一个参考文献的引用:\cite{mittelbach2004}%这里cite后面的这个就是这篇参考文献的标签
 	
 	% 根据当前目录下的10.bib文件，生成参考文献章节
 	% \nocite{*} % 默认情况下，只有被引用的参考文献才会被列出，如果想列出没被引用的参考文献可以使用\nocite{*}命令
@@ -464,13 +464,15 @@ f(x)=x^2+x+1 \label{e1}   自动编号
 在正文中想要引用，就用\cite{标签}即可，需要注意，bib文件内容格式：
 
 ```latex
-@article{ref1,
+@article{ref1,%这里就是上面说的cite后面的哪个标签
     author  = "Author A",
     title   = "Title of the paper",
     journal = "Journal Name",
     year    = "2023",
 }
 ```
+
+![image-20250716173618889](C:\Users\Only one\AppData\Roaming\Typora\typora-user-images\image-20250716173618889.png)
 
 ## 自定义命令以及环境
 
