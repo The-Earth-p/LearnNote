@@ -65,7 +65,7 @@ type House=Area&Address
 
 
 
-## 声明对象类型
+### 声明对象类型
 
 ```typescript
 //声明对象时，其内含有的参数可以通过"，""；"或者换行来分隔，但是实例化的时候必须用","
@@ -76,7 +76,7 @@ age?:number//问号表示可以有
 }
 ```
 
-## 声明函数类型
+### 声明函数类型
 
 ```typescript
 //声明函数的参数类型以及返回数据类型，这里的“=>”作用就是指明哪个是返回的数据类型，是ts中的箭头，不是js中的代替function的箭头函数
@@ -105,7 +105,7 @@ function count(a:number):number{
 
 ## 接口
 
-1.接口类，和后端springboot中的东西一样的，可以定义接口类
+1.接口类，和后端springboot中的东西一样的，可以定义接口类，一个类可以实现多个接口
 
 2.可以定义接口对象：这个接口可以当作一个类型来用，其中可以指定有哪些属性、方法等等，不用implements
 
@@ -123,3 +123,38 @@ age:number
 }
 ```
 
+和type的区别
+
+都能定义对象结构，但是记得type得用“=”，接口和class差不多。但是接口更专注于对象和类，支持继承和合并；而type支持联合类型，交叉类型还有类型别名，其实type的交叉类型可以替代接口里的继承和合并，但是接口的继承和合并更合理
+
+## 泛型
+
+一般在函数的声明时会用到这个泛型，指示一个或多个模糊的数据类型，写接口的时候也可以用这个泛型，但是在实例化的时候一定要指明这个泛型对应的数据类型
+
+## 类型定义文件
+
+在一个.d.ts后缀的文件中，定义一些方法函数什么的，主要用来为现有的Javascript代码提供类型信息，使得typescript可以在用这些库的时候有类型的检查和提示
+
+## 装饰器
+
+### 类装饰器
+
+```typescript
+//这里的这个装饰器，用于在下方p1想要使用tostring这个函数，但是定义的这个类里面并没有这个方法，所以就通过装饰器，来把这个方法装饰到这个类里面
+function Demo(target:Function){
+ target.protoptype.toString=function(){
+   return JSON.stringify(this)
+ }
+}
+
+
+@Demo
+class Person{
+constructor(public name:string){}
+}
+
+const p1 = new Person('zhangsan')
+console.log(p1.toString())
+```
+
+如果类装饰器也返回一个类，则被装饰的哪个类就会被替换
